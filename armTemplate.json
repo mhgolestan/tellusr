@@ -294,7 +294,6 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "windowsVM1OSDisk",
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     }
@@ -343,7 +342,6 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "windowsVM2OSDisk",
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     }

@@ -235,8 +235,8 @@
                 },
                 "osProfile": {
                     "computerName": "tellusr-VM0",
-                    "adminUsername": "adminUsername",
-                    "adminPassword": "adminPassword"
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPasswordOrKey')]"
                 },
                 "storageProfile": {
                     "imageReference": {
@@ -284,8 +284,8 @@
                 },
                 "osProfile": {
                     "computerName": "tellusr-VM1",
-                    "adminUsername": "adminUsername",
-                    "adminPassword": "adminPassword"
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPasswordOrKey')]"
                 },
                 "storageProfile": {
                     "imageReference": {
@@ -333,8 +333,8 @@
                 },
                 "osProfile": {
                     "computerName": "tellusr-VM2",
-                    "adminUsername": "adminUsername",
-                    "adminPassword": "adminPassword"
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPasswordOrKey')]"
                 },
                 "storageProfile": {
                     "imageReference": {

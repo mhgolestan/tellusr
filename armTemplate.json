@@ -120,21 +120,6 @@
             "kind": "Storage"
         },
         {
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2019-11-01",
-            "name": "tellusr-PublicIP",
-            "location": "[resourceGroup().location]",
-            "tags": {
-                "displayName": "tellusrPublicIPAddress"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Dynamic",
-                "dnsSettings": {
-                    "domainNameLabel": "[toLower('tellusrwinvm')]"
-                }
-            }
-        },
-        {
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-08-01",
             "name": "tellusr-nsg",
@@ -189,12 +174,27 @@
             }
         },
         {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "name": "tellusr-PublicIP-vm0",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "tellusrPublicIPAddress-vm0"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower('tellusrwinvm')]"
+                }
+            }
+        },
+        {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-11-01",
             "name": "tellusr-NetworkInterface-vm0",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP-vm0')]",
                 "[resourceId('Microsoft.Network/virtualNetworks', 'tellusr-VirtualNetwork')]"
             ],
             "tags": {
@@ -207,7 +207,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIPvm0')]"
                             },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'tellusr-VirtualNetwork', 'tellusr-VirtualNetwork-Subnet')]"
@@ -267,12 +267,28 @@
         },
 
         {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "name": "tellusr-PublicIP-vm1",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "tellusrPublicIPAddress-vm1"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower('tellusrwinvm')]"
+                }
+            }
+        },
+
+        {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-11-01",
             "name": "tellusr-NetworkInterface-vm1",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP-vm1')]",
                 "[resourceId('Microsoft.Network/virtualNetworks', 'tellusr-VirtualNetwork')]"
             ],
             "tags": {
@@ -285,7 +301,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP-vm1')]"
                             },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'tellusr-VirtualNetwork', 'tellusr-VirtualNetwork-Subnet')]"
@@ -343,14 +359,28 @@
                 }
             }
         },
-
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "name": "tellusr-PublicIP-vm2",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "tellusrPublicIPAddress-vm2"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower('tellusrwinvm')]"
+                }
+            }
+        },
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-11-01",
             "name": "tellusr-NetworkInterface-vm2",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP-vm2')]",
                 "[resourceId('Microsoft.Network/virtualNetworks', 'tellusr-VirtualNetwork')]"
             ],
             "tags": {
@@ -363,7 +393,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP-vm2')]"
                             },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'tellusr-VirtualNetwork', 'tellusr-VirtualNetwork-Subnet')]"

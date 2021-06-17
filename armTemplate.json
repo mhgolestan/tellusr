@@ -224,7 +224,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
-                "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                // "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
             ],
             "tags": {
                 "displayName": "tellusr-VM0"
@@ -251,13 +251,13 @@
                         "createOption": "FromImage"
                     }
                 },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
-                        }
-                    ]
-                },
+                // "networkProfile": {
+                //     "networkInterfaces": [
+                //         {
+                //             "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                //         }
+                //     ]
+                // },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
@@ -273,6 +273,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
+                // "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
             ],
             "tags": {
                 "displayName": "tellusr-VM1"
@@ -299,13 +300,13 @@
                         "createOption": "FromImage"
                     }
                 },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
-                        }
-                    ]
-                },
+                // "networkProfile": {
+                //     "networkInterfaces": [
+                //         {
+                //             "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                //         }
+                //     ]
+                // },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
@@ -321,6 +322,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
+                // "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
             ],
             "tags": {
                 "displayName": "tellusr-VM2"
@@ -347,13 +349,13 @@
                         "createOption": "FromImage"
                     }
                 },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
-                        }
-                    ]
-                },
+                // "networkProfile": {
+                //     "networkInterfaces": [
+                //         {
+                //             "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                //         }
+                //     ]
+                // },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,

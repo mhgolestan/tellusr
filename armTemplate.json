@@ -191,14 +191,14 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-11-01",
-            "name": "tellusr-NetworkInterface",
+            "name": "tellusr-NetworkInterface-vm0",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]",
                 "[resourceId('Microsoft.Network/virtualNetworks', 'tellusr-VirtualNetwork')]"
             ],
             "tags": {
-                "displayName": "tellusr-windowsVM1 Network Interface"
+                "displayName": "tellusr-windowsVM1 Network Interface vm0"
             },
             "properties": {
                 "ipConfigurations": [
@@ -224,7 +224,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
-                // "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface-vm0')]"
             ],
             "tags": {
                 "displayName": "tellusr-VM0"
@@ -250,19 +250,49 @@
                         "createOption": "FromImage"
                     }
                 },
-                // "networkProfile": {
-                //     "networkInterfaces": [
-                //         {
-                //             "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
-                //         }
-                //     ]
-                // },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface-vm0')]"
+                        }
+                    ]
+                },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
                         "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('tellusrstorage'))).primaryEndpoints.blob]"
                     }
                 }
+            }
+        },
+
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-11-01",
+            "name": "tellusr-NetworkInterface-vm1",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]",
+                "[resourceId('Microsoft.Network/virtualNetworks', 'tellusr-VirtualNetwork')]"
+            ],
+            "tags": {
+                "displayName": "tellusr-windowsVM1 Network Interface vm1"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "tellusr-ipConfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'tellusr-VirtualNetwork', 'tellusr-VirtualNetwork-Subnet')]"
+                            }
+                        }
+                    }
+                ]
             }
         },
         {
@@ -272,7 +302,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
-                // "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface-vm1')]"
             ],
             "tags": {
                 "displayName": "tellusr-VM1"
@@ -298,19 +328,49 @@
                         "createOption": "FromImage"
                     }
                 },
-                // "networkProfile": {
-                //     "networkInterfaces": [
-                //         {
-                //             "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
-                //         }
-                //     ]
-                // },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface-vm1')]"
+                        }
+                    ]
+                },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
                         "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('tellusrstorage'))).primaryEndpoints.blob]"
                     }
                 }
+            }
+        },
+
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-11-01",
+            "name": "tellusr-NetworkInterface-vm2",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]",
+                "[resourceId('Microsoft.Network/virtualNetworks', 'tellusr-VirtualNetwork')]"
+            ],
+            "tags": {
+                "displayName": "tellusr-windowsVM1 Network Interface vm2"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "tellusr-ipConfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'tellusr-VirtualNetwork', 'tellusr-VirtualNetwork-Subnet')]"
+                            }
+                        }
+                    }
+                ]
             }
         },
         {
@@ -320,7 +380,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
-                // "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface-vm2')]"
             ],
             "tags": {
                 "displayName": "tellusr-VM2"
@@ -346,13 +406,13 @@
                         "createOption": "FromImage"
                     }
                 },
-                // "networkProfile": {
-                //     "networkInterfaces": [
-                //         {
-                //             "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
-                //         }
-                //     ]
-                // },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface-vm2')]"
+                        }
+                    ]
+                },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,

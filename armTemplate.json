@@ -2,371 +2,368 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "adminUsername": {
-        "type": "string",
-        "metadata": {
-          "description": "Admin username for VM"
+        "adminUsername": {
+            "type": "String",
+            "metadata": {
+                "description": "Admin username for VM"
+            }
+        },
+        "numberOfInstances": {
+            "defaultValue": 1,
+            "type": "Int",
+            "metadata": {
+                "description": "Number of VMs to deploy, limit 5 since this sample is using a single storage account"
+            }
+        },
+        "OS": {
+            "defaultValue": "Windows",
+            "allowedValues": [
+                "Ubuntu",
+                "Windows"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "OS Platform for the VM"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "allowedValues": [
+                "westeurope"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "authenticationType": {
+            "defaultValue": "password",
+            "allowedValues": [
+                "sshPublicKey",
+                "password"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+            }
+        },
+        "adminPasswordOrKey": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+            }
+        },
+        "virtualNetworkName": {
+            "defaultValue": "customer-a-vn",
+            "type": "String",
+            "metadata": {
+                "description": "virtualNetworkName"
+            }
+        },
+        "virtualNetworkResourceGroup": {
+            "defaultValue": "customer-a-rg-vn",
+            "type": "String",
+            "metadata": {
+                "description": "RG where Vnet is deployed"
+            }
+        },
+        "subnetName": {
+            "defaultValue": "customer-a-sub-vm",
+            "type": "String",
+            "metadata": {
+                "description": "Subnet where VMs should be running in"
+            }
         }
-      },
-      "numberOfInstances": {
-        "type": "int",
-        "defaultValue": 1,
-        "metadata": {
-          "description": "Number of VMs to deploy, limit 5 since this sample is using a single storage account"
-        }
-      },
-      "OS": {
-        "type": "string",
-        "defaultValue": "Windows",
-        "allowedValues": [
-          "Ubuntu",
-          "Windows"
-        ],
-        "metadata": {
-          "description": "OS Platform for the VM"
-        }
-      },
-      "location": {
-        "type": "string",
-        "defaultValue": "[resourceGroup().location]",
-        "allowedValues": [
-          "westeurope"
-        ],        
-        "metadata": {
-          "description": "Location for all resources."
-        }
-      },
-      "authenticationType": {
-        "type": "string",
-        "defaultValue": "password",
-        "allowedValues": [
-          "sshPublicKey",
-          "password"
-        ],
-        "metadata": {
-          "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
-        }
-      },
-      "adminPasswordOrKey": {
-        "type": "securestring",
-        "metadata": {
-          "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
-        }
-      },
-      "virtualNetworkName": {
-        "type": "string",
-        "defaultValue": "customer-a-vn",        
-        "metadata": {
-          "description": "virtualNetworkName"
-        }   
-      },    
-      "virtualNetworkResourceGroup": {
-        "type": "string",
-        "defaultValue": "customer-a-rg-vn",        
-        "metadata": {
-          "description": "RG where Vnet is deployed"
-        }
-      },
-      "subnetName": {
-        "type": "string",
-        "defaultValue": "customer-a-sub-vm",        
-        "metadata": {
-          "description": "Subnet where VMs should be running in"
-        }
-      } 
     },
     "variables": {
-      "vnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-      "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('subnetName'))]",
-      "vmName": "customer-a-solr-cl-",      
-      "availabilitySetName": "customer-a-solr-avset",
-      "Ubuntu": {
-        "publisher": "Canonical",
-        "offer": "UbuntuServer",
-        "sku": "16.04.0-LTS",
-        "version": "latest"
-      },
-      "Windows": {
-        "publisher": "MicrosoftWindowsServer",
-        "offer": "WindowsServer",
-        "sku": "2019-Datacenter",
-        "version": "latest"
-      },
-      "imageReference": "[variables(parameters('OS'))]",
-      "linuxConfiguration": {
-        "disablePasswordAuthentication": true,
-        "ssh": {
-          "publicKeys": [
-            {
-              "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
-              "keyData": "[parameters('adminPasswordOrKey')]"
-            }
-          ]
-        }
-      }
-    },
-    "resources": [{
-        "name": "[toLower('windowsVM1storage')]",
-        "type": "Microsoft.Storage/storageAccounts",
-        "apiVersion": "2019-06-01",
-        "location": "[resourceGroup().location]",
-        "tags": {
-            "displayName": "windowsVM1 Storage Account"
+        "vnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('subnetName'))]",
+        "vmName": "customer-a-solr-cl-",
+        "availabilitySetName": "customer-a-solr-avset",
+        "Ubuntu": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "16.04.0-LTS",
+            "version": "latest"
         },
-        "sku": {
-            "name": "Standard_LRS"
+        "Windows": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2019-Datacenter",
+            "version": "latest"
         },
-        "kind": "Storage"
-    },
-    {
-        "name": "windowsVM1-PublicIP",
-        "type": "Microsoft.Network/publicIPAddresses",
-        "apiVersion": "2019-11-01",
-        "location": "[resourceGroup().location]",
-        "tags": {
-            "displayName": "PublicIPAddress"
-        },
-        "properties": {
-            "publicIPAllocationMethod": "Dynamic",
-            "dnsSettings": {
-                "domainNameLabel": "[toLower('windowsVM1')]"
-            }
-        }
-    },
-    {
-        "name": "windowsVM1-nsg",
-        "type": "Microsoft.Network/networkSecurityGroups",
-        "apiVersion": "2018-08-01",
-        "location": "[resourceGroup().location]",
-        "properties": {
-            "securityRules": [
-                {
-                    "name": "nsgRule1",
-                    "properties": {
-                        "description": "description",
-                        "protocol": "Tcp",
-                        "sourcePortRange": "*",
-                        "destinationPortRange": "3389",
-                        "sourceAddressPrefix": "*",
-                        "destinationAddressPrefix": "*",
-                        "access": "Allow",
-                        "priority": 100,
-                        "direction": "Inbound"
+        "imageReference": "[variables(parameters('OS'))]",
+        "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+                "publicKeys": [
+                    {
+                        "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+                        "keyData": "[parameters('adminPasswordOrKey')]"
                     }
-                }
-            ]
+                ]
+            }
         }
     },
-    {
-        "name": "windowsVM1-VirtualNetwork",
-        "type": "Microsoft.Network/virtualNetworks",
-        "apiVersion": "2019-11-01",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Network/networkSecurityGroups', 'windowsVM1-nsg')]"
-        ],
-        "tags": {
-            "displayName": "windowsVM1-VirtualNetwork"
-        },
-        "properties": {
-            "addressSpace": {
-                "addressPrefixes": [
-                    "10.0.0.0/16"
-                ]
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[toLower('tellusrstorage')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "windowsVM1 Storage Account"
             },
-            "subnets": [
-                {
-                    "name": "windowsVM1-VirtualNetwork-Subnet",
-                    "properties": {
-                        "addressPrefix": "10.0.0.0/24",
-                        "networkSecurityGroup": {
-                            "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'windowsVM1-nsg')]"
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "Storage"
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "name": "tellusr-PublicIP",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "tellusrPublicIPAddress"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[toLower('tellusrwinvm')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-08-01",
+            "name": "tellusr-nsg",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "tellusr-nsgRule1",
+                        "properties": {
+                            "description": "description",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
                         }
                     }
-                }
-            ]
-        }
-    },
-    {
-        "name": "windowsVM1-NetworkInterface",
-        "type": "Microsoft.Network/networkInterfaces",
-        "apiVersion": "2019-11-01",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Network/publicIPAddresses', 'windowsVM1-PublicIP')]",
-            "[resourceId('Microsoft.Network/virtualNetworks', 'windowsVM1-VirtualNetwork')]"
-        ],
-        "tags": {
-            "displayName": "windowsVM1 Network Interface"
+                ]
+            }
         },
-        "properties": {
-            "ipConfigurations": [
-                {
-                    "name": "ipConfig1",
-                    "properties": {
-                        "privateIPAllocationMethod": "Dynamic",
-                        "publicIPAddress": {
-                            "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'windowsVM1-PublicIP')]"
-                        },
-                        "subnet": {
-                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'windowsVM1-VirtualNetwork', 'windowsVM1-VirtualNetwork-Subnet')]"
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-11-01",
+            "name": "tellusr-VirtualNetwork",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'tellusr-nsg')]"
+            ],
+            "tags": {
+                "displayName": "tellusr-VirtualNetwork"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "tellusr-VirtualNetwork-Subnet",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'tellusr-nsg')]"
+                            }
                         }
                     }
-                }
-            ]
-        }
-    },
-    {
-        "name": "windowsVM1",
-        "type": "Microsoft.Compute/virtualMachines",
-        "apiVersion": "2019-07-01",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts', toLower('windowsVM1storage'))]",
-            "[resourceId('Microsoft.Network/networkInterfaces', 'windowsVM1-NetworkInterface')]"
-        ],
-        "tags": {
-            "displayName": "windowsVM1"
+                ]
+            }
         },
-        "properties": {
-            "hardwareProfile": {
-                "vmSize": "Standard_A2_v2"
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-11-01",
+            "name": "tellusr-NetworkInterface",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]",
+                "[resourceId('Microsoft.Network/virtualNetworks', 'tellusr-VirtualNetwork')]"
+            ],
+            "tags": {
+                "displayName": "tellusr-windowsVM1 Network Interface"
             },
-            "osProfile": {
-                "computerName": "windowsVM1",
-                "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword"
-            },
-            "storageProfile": {
-                "imageReference": {
-                    "publisher": "MicrosoftWindowsServer",
-                    "offer": "WindowsServer",
-                    "sku": "2012-R2-Datacenter",
-                    "version": "latest"
-                },
-                "osDisk": {
-                    "name": "windowsVM1OSDisk",
-                    "caching": "ReadWrite",
-                    "createOption": "FromImage"
-                }
-            },
-            "networkProfile": {
-                "networkInterfaces": [
+            "properties": {
+                "ipConfigurations": [
                     {
-                        "id": "[resourceId('Microsoft.Network/networkInterfaces', 'windowsVM1-NetworkInterface')]"
+                        "name": "tellusr-ipConfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP')]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'tellusr-VirtualNetwork', 'tellusr-VirtualNetwork-Subnet')]"
+                            }
+                        }
                     }
                 ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "tellusr-VM0",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+            ],
+            "tags": {
+                "displayName": "tellusr-VM0"
             },
-            "diagnosticsProfile": {
-                "bootDiagnostics": {
-                    "enabled": true,
-                    "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('windowsVM1storage'))).primaryEndpoints.blob]"
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2_v2"
+                },
+                "osProfile": {
+                    "computerName": "tellusr-VM0",
+                    "adminUsername": "adminUsername",
+                    "adminPassword": "adminPassword"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2012-R2-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "windowsVM1OSDisk",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('tellusrstorage'))).primaryEndpoints.blob]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "tellusr-VM1",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+            ],
+            "tags": {
+                "displayName": "tellusr-VM1"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2_v2"
+                },
+                "osProfile": {
+                    "computerName": "tellusr-VM1",
+                    "adminUsername": "adminUsername",
+                    "adminPassword": "adminPassword"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2012-R2-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "windowsVM1OSDisk",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('tellusrstorage'))).primaryEndpoints.blob]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "tellusr-VM2",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', toLower('tellusrstorage'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+            ],
+            "tags": {
+                "displayName": "tellusr-VM2"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_A2_v2"
+                },
+                "osProfile": {
+                    "computerName": "tellusr-VM2",
+                    "adminUsername": "adminUsername",
+                    "adminPassword": "adminPassword"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2012-R2-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "windowsVM1OSDisk",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'tellusr-NetworkInterface')]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('tellusrstorage'))).primaryEndpoints.blob]"
+                    }
                 }
             }
         }
-    },
-    {
-        "name": "windowsVM1",
-        "type": "Microsoft.Compute/virtualMachines",
-        "apiVersion": "2019-07-01",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts', toLower('windowsVM1storage'))]",
-            "[resourceId('Microsoft.Network/networkInterfaces', 'windowsVM1-NetworkInterface')]"
-        ],
-        "tags": {
-            "displayName": "windowsVM1"
-        },
-        "properties": {
-            "hardwareProfile": {
-                "vmSize": "Standard_A2_v2"
-            },
-            "osProfile": {
-                "computerName": "windowsVM1",
-                "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword"
-            },
-            "storageProfile": {
-                "imageReference": {
-                    "publisher": "MicrosoftWindowsServer",
-                    "offer": "WindowsServer",
-                    "sku": "2012-R2-Datacenter",
-                    "version": "latest"
-                },
-                "osDisk": {
-                    "name": "windowsVM1OSDisk",
-                    "caching": "ReadWrite",
-                    "createOption": "FromImage"
-                }
-            },
-            "networkProfile": {
-                "networkInterfaces": [
-                    {
-                        "id": "[resourceId('Microsoft.Network/networkInterfaces', 'windowsVM1-NetworkInterface')]"
-                    }
-                ]
-            },
-            "diagnosticsProfile": {
-                "bootDiagnostics": {
-                    "enabled": true,
-                    "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('windowsVM1storage'))).primaryEndpoints.blob]"
-                }
-            }
-        }
-    },
-    {
-        "name": "windowsVM1",
-        "type": "Microsoft.Compute/virtualMachines",
-        "apiVersion": "2019-07-01",
-        "location": "[resourceGroup().location]",
-        "copy": {
-          "name": "virtualMachineLoop",
-          "count": 3
-        },
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts', toLower('windowsVM1storage'))]",
-            "[resourceId('Microsoft.Network/networkInterfaces', 'windowsVM1-NetworkInterface')]"
-        ],
-        "tags": {
-            "displayName": "windowsVM1"
-        },
-        "properties": {
-            "hardwareProfile": {
-                "vmSize": "Standard_A2_v2"
-            },
-            "osProfile": {
-                "computerName": "windowsVM1",
-                "adminUsername": "adminUsername",
-                "adminPassword": "adminPassword"
-            },
-            "storageProfile": {
-                "imageReference": {
-                    "publisher": "MicrosoftWindowsServer",
-                    "offer": "WindowsServer",
-                    "sku": "2012-R2-Datacenter",
-                    "version": "latest"
-                },
-                "osDisk": {
-                    "name": "windowsVM1OSDisk",
-                    "caching": "ReadWrite",
-                    "createOption": "FromImage"
-                }
-            },
-            "networkProfile": {
-                "networkInterfaces": [
-                    {
-                        "id": "[resourceId('Microsoft.Network/networkInterfaces', 'windowsVM1-NetworkInterface')]"
-                    }
-                ]
-            },
-            "diagnosticsProfile": {
-                "bootDiagnostics": {
-                    "enabled": true,
-                    "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', toLower('windowsVM1storage'))).primaryEndpoints.blob]"
-                }
-            }
-        }
-    }
     ],
     "outputs": {}
 }

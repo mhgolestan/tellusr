@@ -236,7 +236,7 @@
                 "osProfile": {
                     "computerName": "tellusr-VM0",
                     "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPasswordOrKey')]"
+                    "adminPassword": "adminPassword"
                 },
                 "storageProfile": {
                     "imageReference": {
@@ -246,7 +246,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "windowsVM1OSDisk",
+                        "name": "windowsVM0OSDisk",
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     }
@@ -344,7 +344,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "windowsVM1OSDisk",
+                        "name": "windowsVM2OSDisk",
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     }

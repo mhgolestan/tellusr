@@ -236,7 +236,7 @@
                 "osProfile": {
                     "computerName": "tellusr-VM0",
                     "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "adminPassword"
+                    "adminPassword": "[parameters('adminPasswordOrKey')]"
                 },
                 "storageProfile": {
                     "imageReference": {

@@ -207,7 +207,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIPvm0')]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tellusr-PublicIP-vm0')]"
                             },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'tellusr-VirtualNetwork', 'tellusr-VirtualNetwork-Subnet')]"
